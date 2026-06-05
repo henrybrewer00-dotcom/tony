@@ -25,10 +25,14 @@
 <title>Tony For Our Fitness — Personal Training by Tony Quartini</title>
 <meta name="description" content="Personal training with Tony Quartini. Strength, weight loss, flexibility and rehabilitation — coaching for real people at every level. Train smarter. Live stronger.">
 
-<!-- Type system: Space Grotesk (display) + Inter (body) -->
+<!-- Type system: one family, Bricolage Grotesque — characterful
+     grotesk with optical sizing; weight contrast does the rest -->
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,400;12..96,500;12..96,600;12..96,700;12..96,800&display=swap" rel="stylesheet">
+
+<!-- flags JS availability so content never hides if scripts fail -->
+<script>document.documentElement.classList.add("js");</script>
 
 <style>
 /* ============================================================
@@ -47,14 +51,17 @@
   --accent-ink: #8F5527;   /* accent, darkened for hover/text */
   --card:       #FBFAF7;   /* card surface */
 
-  --font-display: "Space Grotesk", "Helvetica Neue", Arial, sans-serif;
-  --font-body:    "Inter", "Helvetica Neue", Arial, sans-serif;
+  --font-display: "Bricolage Grotesque", "Helvetica Neue", Arial, sans-serif;
+  --font-body:    "Bricolage Grotesque", "Helvetica Neue", Arial, sans-serif;
 
   --nav-h: 72px;
   --radius: 14px;
   --container: 1140px;
 
-  --ease: cubic-bezier(.22,.61,.36,1);
+  /* strong ease-out (quint) — built-in CSS easings are too weak */
+  --ease:    cubic-bezier(0.23, 1, 0.32, 1);
+  /* strong ease-in-out for on-screen movement */
+  --ease-io: cubic-bezier(0.77, 0, 0.175, 1);
 }
 
 /* ============================================================
@@ -88,7 +95,7 @@ h1, h2, h3 {
   text-wrap: balance;
 }
 
-p { max-width: 62ch; }
+p { max-width: 62ch; text-wrap: pretty; }
 
 a { color: var(--accent-ink); }
 
@@ -121,7 +128,7 @@ a { color: var(--accent-ink); }
 
 section { padding: clamp(80px, 11vw, 140px) 0; }
 
-/* shared section header style */
+/* hero keeps the one deliberate brand label */
 .kicker {
   display: inline-block;
   font-family: var(--font-display);
@@ -132,9 +139,20 @@ section { padding: clamp(80px, 11vw, 140px) 0; }
   color: var(--accent-ink);
   margin-bottom: 14px;
 }
+/* section headings open with a short bronze rule instead of a
+   repeated uppercase eyebrow — one cadence, less scaffolding */
 .section-title {
   font-size: clamp(1.9rem, 4vw, 2.75rem);
   margin-bottom: 18px;
+}
+.section-title::before {
+  content: "";
+  display: block;
+  width: 44px;
+  height: 3px;
+  border-radius: 2px;
+  background: var(--accent);
+  margin-bottom: 20px;
 }
 .section-lede { color: var(--ink-soft); margin-bottom: 8px; }
 
@@ -296,27 +314,47 @@ section { padding: clamp(80px, 11vw, 140px) 0; }
   max-width: 44ch;
 }
 .btn {
-  display: inline-block;
+  display: inline-flex;
+  align-items: center;
+  gap: 12px;
   font-family: var(--font-display);
   font-weight: 600;
   font-size: 1rem;
   letter-spacing: 0.01em;
-  padding: 16px 34px;
+  padding: 15px 30px;
   border-radius: 999px;
   border: 0;
   cursor: pointer;
   text-decoration: none;
   background: var(--accent-ink);   /* bronze primary — let the accent work */
   color: #fff;
-  transition: background-color .25s var(--ease), transform .25s var(--ease), box-shadow .25s var(--ease);
+  /* exact properties, fast press feedback (never `all`) */
+  transition: background-color .2s var(--ease),
+              transform 160ms var(--ease),
+              box-shadow .25s var(--ease);
 }
-.btn:hover {
-  background: var(--ink);
-  color: var(--paper);
-  transform: translateY(-2px);
-  box-shadow: 0 10px 24px rgba(27,26,24,0.22);
+@media (hover: hover) and (pointer: fine) {
+  .btn:hover {
+    background: var(--ink);
+    color: var(--paper);
+    transform: translateY(-2px);
+    box-shadow: 0 8px 20px rgba(27,26,24,0.2);
+  }
+  .btn:hover .btn-chip { transform: translateX(3px); }
 }
-.btn:active { transform: translateY(0); }
+/* every press gets physical feedback */
+.btn:active { transform: scale(0.97); }
+/* arrow chip inside the hero CTA — nudges on hover */
+.btn-chip {
+  width: 28px; height: 28px;
+  border-radius: 50%;
+  background: rgba(255,255,255,0.18);
+  display: grid;
+  place-items: center;
+  font-size: 0.9em;
+  margin-right: -8px;
+  transition: transform .25s var(--ease);
+}
 .hero-note {
   margin-top: 22px;
   font-size: 0.875rem;
@@ -425,43 +463,24 @@ section { padding: clamp(80px, 11vw, 140px) 0; }
   margin-top: 48px;
 }
 .card {
-  position: relative;
   background: var(--card);
   border: 1px solid var(--line);
   border-radius: var(--radius);
   padding: 34px 28px;
-  overflow: hidden;
-  transition: transform .3s var(--ease), box-shadow .3s var(--ease);
+  transition: transform .25s var(--ease), box-shadow .25s var(--ease);
 }
-/* big ghost index number, top-right of each card */
-.card::before {
-  content: attr(data-num);
-  position: absolute;
-  top: 14px; right: 20px;
-  font-family: var(--font-display);
-  font-weight: 700;
-  font-size: 2.4rem;
-  line-height: 1;
-  color: rgba(176,110,59,0.16);
-  transition: color .3s var(--ease);
+/* hover lift only where hover exists (touch taps shouldn't jump) */
+@media (hover: hover) and (pointer: fine) {
+  .card:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 16px 36px rgba(27,26,24,0.08);
+  }
+  .card:hover .card-icon {
+    background: var(--accent-ink);
+    color: #fff;
+  }
 }
-/* bronze edge slides in on hover */
-.card::after {
-  content: "";
-  position: absolute;
-  inset: 0 auto 0 0;
-  width: 4px;
-  background: var(--accent);
-  transform: scaleY(0);
-  transform-origin: bottom;
-  transition: transform .35s var(--ease);
-}
-.card:hover {
-  transform: translateY(-5px);
-  box-shadow: 0 18px 38px rgba(27,26,24,0.09);
-}
-.card:hover::before { color: rgba(176,110,59,0.34); }
-.card:hover::after { transform: scaleY(1); }
+.card-icon { transition: background-color .25s var(--ease), color .25s var(--ease); }
 .card-icon {
   width: 46px; height: 46px;
   display: grid;
@@ -541,11 +560,13 @@ section { padding: clamp(80px, 11vw, 140px) 0; }
   height: 100%;
   object-fit: cover;
   aspect-ratio: 4 / 3;
-  transition: transform .6s var(--ease);
+  transition: transform .5s var(--ease);
 }
 .g-item.feature { grid-column: span 2; grid-row: span 2; }
 .g-item.feature img { aspect-ratio: auto; }
-.g-item:hover img { transform: scale(1.045); }
+@media (hover: hover) and (pointer: fine) {
+  .g-item:hover img { transform: scale(1.04); }
+}
 .g-item figcaption {
   position: absolute;
   inset: auto 0 0 0;
@@ -571,7 +592,6 @@ section { padding: clamp(80px, 11vw, 140px) 0; }
    7. TESTIMONIALS — rotating quotes
 ============================================================ */
 .testimonials { background: var(--ink); color: var(--paper); }
-.testimonials .kicker { color: var(--accent); }
 .testimonials .section-title { color: var(--paper); }
 .quote-stage {
   position: relative;
@@ -583,8 +603,8 @@ section { padding: clamp(80px, 11vw, 140px) 0; }
   position: absolute;
   inset: 0;
   opacity: 0;
-  transform: translateY(14px);
-  transition: opacity .6s var(--ease), transform .6s var(--ease);
+  transform: translateY(10px);
+  transition: opacity .45s var(--ease), transform .45s var(--ease);
   pointer-events: none;
 }
 .quote.active { opacity: 1; transform: translateY(0); pointer-events: auto; }
@@ -731,16 +751,17 @@ section { padding: clamp(80px, 11vw, 140px) 0; }
    Elements with .reveal fade/rise in when they enter the
    viewport (JS adds .in). Respect reduced-motion below.
 ============================================================ */
-.reveal {
+/* content is visible by default; only hidden when JS is present
+   to run the reveal (never gate visibility on a script) */
+.reveal { transition: opacity .55s var(--ease), transform .55s var(--ease); }
+.js .reveal:not(.in) {
   opacity: 0;
-  transform: translateY(26px);
-  transition: opacity .7s var(--ease), transform .7s var(--ease);
+  transform: translateY(18px);
 }
-.reveal.in { opacity: 1; transform: none; }
-/* gentle stagger inside grids */
-.reveal[data-delay="1"] { transition-delay: .1s; }
-.reveal[data-delay="2"] { transition-delay: .2s; }
-.reveal[data-delay="3"] { transition-delay: .3s; }
+/* tight stagger inside grids (60ms steps — long delays feel slow) */
+.reveal[data-delay="1"] { transition-delay: 60ms; }
+.reveal[data-delay="2"] { transition-delay: 120ms; }
+.reveal[data-delay="3"] { transition-delay: 180ms; }
 
 @media (prefers-reduced-motion: reduce) {
   html { scroll-behavior: auto; }
@@ -789,10 +810,10 @@ section { padding: clamp(80px, 11vw, 140px) 0; }
         <h1>Train smarter.<br><span class="accent-line">Live stronger.</span></h1>
         <p class="hero-sub">
           One-on-one coaching built around your body, your schedule, and your
-          goals — whether you're lifting for the first time or coming back
+          goals, whether you're lifting for the first time or coming back
           from injury.
         </p>
-        <a class="btn" href="#contact">Start your first session</a>
+        <a class="btn" href="#contact">Start your first session <span class="btn-chip" aria-hidden="true">&rarr;</span></a>
         <p class="hero-note">6+ years coaching real people at every level.</p>
       </div>
 
@@ -833,13 +854,12 @@ section { padding: clamp(80px, 11vw, 140px) 0; }
   <section class="services" id="services">
     <div class="container">
       <div class="reveal">
-        <span class="kicker">Services</span>
         <h2 class="section-title">Coaching that meets you where you are</h2>
-        <p class="section-lede">Every program is written for you — no templates, no guesswork.</p>
+        <p class="section-lede">Every program is written for you. No templates, no guesswork.</p>
       </div>
 
       <div class="services-grid">
-        <article class="card reveal" data-num="01">
+        <article class="card reveal">
           <div class="card-icon" aria-hidden="true">
             <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M6.5 6.5v11M3.5 9v6M17.5 6.5v11M20.5 9v6M6.5 12h11"/></svg>
           </div>
@@ -848,16 +868,16 @@ section { padding: clamp(80px, 11vw, 140px) 0; }
           technique coaching that keeps you safe under the bar.</p>
         </article>
 
-        <article class="card reveal" data-delay="1" data-num="02">
+        <article class="card reveal" data-delay="1">
           <div class="card-icon" aria-hidden="true">
             <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="3 17 9 11 13 15 21 7"/><polyline points="15 7 21 7 21 13"/></svg>
           </div>
           <h3>Weight Loss</h3>
           <p>Sustainable fat loss through smart training and habits you can
-          actually keep — no crash diets, no burnout.</p>
+          actually keep. No crash diets, no burnout.</p>
         </article>
 
-        <article class="card reveal" data-delay="2" data-num="03">
+        <article class="card reveal" data-delay="2">
           <div class="card-icon" aria-hidden="true">
             <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M12 3v4M12 7c-3 2-4 4-4 7a4 4 0 0 0 8 0c0-3-1-5-4-7zM8 21h8"/></svg>
           </div>
@@ -866,7 +886,7 @@ section { padding: clamp(80px, 11vw, 140px) 0; }
           that helps you move, sit, and stand with ease.</p>
         </article>
 
-        <article class="card reveal" data-delay="3" data-num="04">
+        <article class="card reveal" data-delay="3">
           <div class="card-icon" aria-hidden="true">
             <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19.5 13.5 12 21l-7.5-7.5a5 5 0 1 1 7.5-6.6 5 5 0 1 1 7.5 6.6z"/></svg>
           </div>
@@ -887,7 +907,6 @@ section { padding: clamp(80px, 11vw, 140px) 0; }
            alt="Tony Quartini standing on a truss bridge, arms crossed"
            loading="lazy" width="1200" height="800">
       <div class="about-body reveal" data-delay="1">
-        <span class="kicker">About</span>
         <h2 class="section-title">Hi, I'm Tony Quartini.</h2>
         <p>
           I started training clients in <strong>2011</strong>, and somewhere
@@ -898,12 +917,12 @@ section { padding: clamp(80px, 11vw, 140px) 0; }
         <p>
           With over six years of hands-on coaching, I've worked with complete
           beginners, busy parents, desk-bound professionals, and athletes
-          coming back from injury. My approach is simple — meet you where you
+          coming back from injury. My approach is simple: meet you where you
           are, build a plan that fits your life, and progress at a pace your
           body can sustain.
         </p>
         <p>
-          No yelling. No gimmicks. Just consistent, intelligent training —
+          No yelling. No gimmicks. Just consistent, intelligent training,
           and a coach in your corner.
         </p>
         <div class="about-stats">
@@ -930,9 +949,8 @@ section { padding: clamp(80px, 11vw, 140px) 0; }
   <section class="gallery" id="gallery">
     <div class="container">
       <div class="reveal">
-        <span class="kicker">Gallery</span>
         <h2 class="section-title">Real training, real places</h2>
-        <p class="section-lede">A look at the training — strength, mobility, conditioning and recovery.</p>
+        <p class="section-lede">A look at the training: strength, mobility, conditioning and recovery.</p>
       </div>
 
       <div class="gallery-grid">
@@ -944,7 +962,7 @@ section { padding: clamp(80px, 11vw, 140px) 0; }
         <figure class="g-item reveal" data-delay="1">
           <img src="assets/gallery/tony-0031.jpg" loading="lazy" width="900" height="600"
                alt="Tony performing a suspended lunge outdoors">
-          <figcaption>Lower-body work — anywhere</figcaption>
+          <figcaption>Lower-body work, anywhere</figcaption>
         </figure>
         <figure class="g-item reveal" data-delay="2">
           <img src="assets/gallery/cablerow.jpg" loading="lazy" width="900" height="674"
@@ -974,7 +992,6 @@ section { padding: clamp(80px, 11vw, 140px) 0; }
   <section class="testimonials" id="testimonials">
     <div class="container">
       <div class="reveal">
-        <span class="kicker">Testimonials</span>
         <h2 class="section-title">What clients say</h2>
       </div>
 
@@ -985,19 +1002,19 @@ section { padding: clamp(80px, 11vw, 140px) 0; }
           <blockquote>"I came to Tony after a back injury convinced my lifting
           days were over. A year later I'm deadlifting pain-free and stronger
           than I was at thirty."</blockquote>
-          <figcaption><strong>Marcus D.</strong> — Rehabilitation client</figcaption>
+          <figcaption><strong>Marcus D.</strong> · Rehabilitation client</figcaption>
         </figure>
         <figure class="quote" role="group" aria-label="Testimonial 2 of 3">
           <blockquote>"Down 38 pounds and I never once felt like I was on a
-          diet. Tony built everything around my actual life — kids, job,
+          diet. Tony built everything around my actual life: kids, job,
           travel and all."</blockquote>
-          <figcaption><strong>Priya S.</strong> — Weight loss client</figcaption>
+          <figcaption><strong>Priya S.</strong> · Weight loss client</figcaption>
         </figure>
         <figure class="quote" role="group" aria-label="Testimonial 3 of 3">
           <blockquote>"I sat at a desk for fifteen years and it showed. Six
           months with Tony and my posture, my energy, even my sleep are
           completely different."</blockquote>
-          <figcaption><strong>James K.</strong> — Flexibility &amp; posture client</figcaption>
+          <figcaption><strong>James K.</strong> · Flexibility &amp; posture client</figcaption>
         </figure>
       </div>
       <div class="quote-dots" id="quoteDots" role="tablist" aria-label="Choose testimonial">
@@ -1012,14 +1029,13 @@ section { padding: clamp(80px, 11vw, 140px) 0; }
   <section class="contact" id="contact">
     <div class="container contact-grid">
       <div class="contact-intro reveal">
-        <span class="kicker">Contact</span>
         <h2 class="section-title">Let's get started</h2>
         <p>
           Tell me a little about yourself and what you're working toward.
           I'll get back to you within one business day to set up a free
           intro conversation.
         </p>
-        <p>No pressure, no hard sell — just a chat about your goals.</p>
+        <p>No pressure, no hard sell. Just a chat about your goals.</p>
       </div>
 
       <div class="contact-form reveal" data-delay="1">
@@ -1073,7 +1089,7 @@ section { padding: clamp(80px, 11vw, 140px) 0; }
             <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
           </div>
           <h3>Message received</h3>
-          <p>Thanks for reaching out — I'll get back to you within one
+          <p>Thanks for reaching out. I'll get back to you within one
           business day.</p>
         </div>
       </div>
