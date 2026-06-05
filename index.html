@@ -2,11 +2,11 @@
 <html lang="en">
 <head>
 <!-- ============================================================
-  TONY FOR OUR FITNESS — v2 "Ember" redesign
+  TONY QUARTINI — v2 "Fern" (light + deep green)
   Personal training by Tony Quartini
 
-  Direction: dark cinematic athletic. Warm charcoal surface,
-  one ember accent, Archivo width-contrast type, photo-led.
+  Direction: light cinematic athletic. Crisp near-white surface,
+  one deep forest-green accent, Archivo width-contrast type, photo-led.
 
   HOW TO USE
   Open this file in a browser. Images live in assets/.
@@ -20,7 +20,7 @@
 ============================================================ -->
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Tony For Our Fitness — Personal Training by Tony Quartini</title>
+<title>Tony Quartini — Personal Training</title>
 <meta name="description" content="Personal training with Tony Quartini. Strength, weight loss, mobility and rehabilitation. 15+ years of coaching real people. Train smarter. Live stronger.">
 
 <!-- One family: Archivo variable. Width axis does the brand work —
@@ -34,19 +34,21 @@
 
 <style>
 /* ============================================================
-   1. TOKENS — committed dark: the surface IS the brand.
-   Warm charcoal, light warm ink, one ember accent.
+   1. TOKENS — light + deep green: crisp surface, one committed
+   forest accent ("Fern").
 ============================================================ */
 :root {
-  --bg:        #131110;            /* warm near-black surface */
-  --bg-raise:  #1B1816;            /* raised panels */
-  --bg-well:   #0D0C0B;            /* recessed wells */
-  --ink:       #F2EDE4;            /* warm light text */
-  --muted:     #A89E90;            /* secondary text */
-  --line:      rgba(242,237,228,0.11);
-  --ember:     #D87A3A;            /* the one accent */
-  --ember-hot: #E88E4D;            /* accent hover */
-  --ember-ink: #1D120A;            /* dark text on ember */
+  /* light + deep green ("Fern"). Var names kept from v2 for
+     stability: --ember IS the accent (now forest green). */
+  --bg:        #F7F8F6;            /* crisp near-white, green-tinted */
+  --bg-raise:  #FFFFFF;            /* raised panels */
+  --bg-well:   #ECEFEA;            /* recessed wells */
+  --ink:       #161A16;            /* near-black, green-tinted */
+  --muted:     #535B53;            /* secondary text */
+  --line:      #DBE0D9;
+  --ember:     #1F5138;            /* the one accent: deep forest */
+  --ember-hot: #2C6B4A;            /* accent hover / links */
+  --ember-ink: #F2F7F2;            /* light text on green */
 
   --font: "Archivo", "Helvetica Neue", Arial, sans-serif;
 
@@ -147,7 +149,7 @@ section { padding: clamp(90px, 12vw, 160px) 0; }
   gap: 4px;
   padding: 8px 8px 8px 20px;
   border-radius: 999px;
-  background: rgba(19,17,16,0.55);
+  background: rgba(247,248,246,0.6);
   border: 1px solid var(--line);
   -webkit-backdrop-filter: blur(16px);
   backdrop-filter: blur(16px);
@@ -155,8 +157,8 @@ section { padding: clamp(90px, 12vw, 160px) 0; }
   max-width: calc(100% - 24px);
 }
 .nav.scrolled {
-  background: rgba(13,12,11,0.78);
-  box-shadow: 0 8px 30px rgba(0,0,0,0.35);
+  background: rgba(247,248,246,0.88);
+  box-shadow: 0 8px 30px rgba(22,26,22,0.1);
 }
 .logo {
   font-weight: 800;
@@ -187,7 +189,7 @@ section { padding: clamp(90px, 12vw, 160px) 0; }
   white-space: nowrap;
   transition: background-color .2s var(--ease), color .2s var(--ease);
 }
-.nav-links a:hover { background: rgba(242,237,228,0.08); }
+.nav-links a:hover { background: rgba(22,26,22,0.06); }
 .nav-links a.nav-cta {
   background: var(--ember);
   color: var(--ember-ink);
@@ -227,7 +229,7 @@ section { padding: clamp(90px, 12vw, 160px) 0; }
   position: fixed;
   inset: 0;
   z-index: var(--z-overlay);
-  background: rgba(13,12,11,0.92);
+  background: rgba(247,248,246,0.94);
   -webkit-backdrop-filter: blur(24px);
   backdrop-filter: blur(24px);
   display: grid;
@@ -280,8 +282,8 @@ body.menu-locked { overflow: hidden; }
   position: relative;
   overflow: clip;
   background:
-    radial-gradient(58% 44% at 78% 24%, rgba(216,122,58,0.13) 0%, transparent 70%),
-    radial-gradient(40% 30% at 12% 88%, rgba(216,122,58,0.06) 0%, transparent 70%);
+    radial-gradient(58% 44% at 78% 24%, rgba(31,81,56,0.08) 0%, transparent 70%),
+    radial-gradient(40% 30% at 12% 88%, rgba(31,81,56,0.05) 0%, transparent 70%);
 }
 .hero-grid {
   display: grid;
@@ -354,7 +356,7 @@ body.menu-locked { overflow: hidden; }
   .btn:hover {
     background: var(--ember-hot);
     transform: translateY(-2px);
-    box-shadow: 0 12px 30px rgba(216,122,58,0.25);
+    box-shadow: 0 12px 30px rgba(31,81,56,0.25);
   }
   .btn:hover .btn-chip { transform: translateX(3px); }
 }
@@ -362,7 +364,7 @@ body.menu-locked { overflow: hidden; }
 .btn-chip {
   width: 28px; height: 28px;
   border-radius: 50%;
-  background: rgba(29,18,10,0.18);
+  background: rgba(255,255,255,0.16);
   display: grid;
   place-items: center;
   font-size: 0.9em;
@@ -380,7 +382,7 @@ body.menu-locked { overflow: hidden; }
   position: absolute;
   border-radius: var(--radius-bezel);
   padding: 6px;                       /* outer bezel shell */
-  background: rgba(242,237,228,0.05);
+  background: rgba(22,26,22,0.04);
   border: 1px solid var(--line);
 }
 .hero-stack .shot img {
@@ -398,7 +400,7 @@ body.menu-locked { overflow: hidden; }
   inset: 30% 0 0 36%;
   transform: rotate(2.6deg);
   z-index: 3;
-  box-shadow: 0 30px 60px rgba(0,0,0,0.45);
+  box-shadow: 0 24px 50px rgba(22,26,22,0.22);
 }
 .js .hero-stack .shot-a {
   opacity: 0;
@@ -439,7 +441,7 @@ body.menu-locked { overflow: hidden; }
 .tile {
   border-radius: var(--radius-bezel);
   padding: 6px;
-  background: rgba(242,237,228,0.04);
+  background: rgba(22,26,22,0.03);
   border: 1px solid var(--line);
 }
 .tile-core {
@@ -470,6 +472,7 @@ body.menu-locked { overflow: hidden; }
 }
 .tile h3, .tile p, .tile .tile-tag { position: relative; z-index: 1; }
 .tile h3 {
+  color: #fff;
   font-weight: 800;
   font-stretch: 112%;
   text-transform: uppercase;
@@ -477,13 +480,13 @@ body.menu-locked { overflow: hidden; }
   letter-spacing: 0.01em;
   margin-bottom: 8px;
 }
-.tile p { font-size: 0.94rem; color: rgba(242,237,228,0.78); max-width: 46ch; }
+.tile p { font-size: 0.94rem; color: rgba(255,255,255,0.85); max-width: 46ch; }
 .tile .tile-tag {
   align-self: flex-start;
   font-size: 0.76rem;
   font-weight: 700;
   letter-spacing: 0.06em;
-  color: var(--ember-hot);
+  color: #A9D8BC;
   margin-bottom: auto;
 }
 @media (hover: hover) and (pointer: fine) {
@@ -513,7 +516,7 @@ body.menu-locked { overflow: hidden; }
 .about-photo-frame {
   border-radius: var(--radius-bezel);
   padding: 6px;
-  background: rgba(242,237,228,0.05);
+  background: rgba(22,26,22,0.04);
   border: 1px solid var(--line);
   transform: rotate(-1.6deg);
 }
@@ -571,7 +574,7 @@ body.menu-locked { overflow: hidden; }
 .g-card .g-frame {
   border-radius: var(--radius-bezel);
   padding: 6px;
-  background: rgba(242,237,228,0.04);
+  background: rgba(22,26,22,0.03);
   border: 1px solid var(--line);
 }
 .g-card img {
@@ -641,7 +644,7 @@ body.menu-locked { overflow: hidden; }
 .quote figcaption {
   margin-top: 22px;
   font-size: 0.95rem;
-  color: rgba(29,18,10,0.66);
+  color: rgba(242,247,242,0.72);
 }
 .quote figcaption strong { color: var(--ember-ink); font-weight: 700; }
 .quote-dots { display: flex; gap: 8px; margin-top: 18px; }
@@ -655,7 +658,7 @@ body.menu-locked { overflow: hidden; }
   content: "";
   width: 10px; height: 10px;
   border-radius: 50%;
-  background: rgba(29,18,10,0.25);
+  background: rgba(242,247,242,0.35);
   transition: background-color .3s var(--ease), transform .3s var(--ease);
 }
 .quote-dots button[aria-selected="true"]::after {
@@ -677,7 +680,7 @@ body.menu-locked { overflow: hidden; }
 .contact-form {
   border-radius: var(--radius-bezel);
   padding: 6px;
-  background: rgba(242,237,228,0.04);
+  background: rgba(22,26,22,0.03);
   border: 1px solid var(--line);
 }
 .contact-form-core {
@@ -698,29 +701,29 @@ body.menu-locked { overflow: hidden; }
   width: 100%;
   font: inherit;
   color: var(--ink);
-  background: var(--bg-well);
+  background: var(--bg);
   border: 1px solid var(--line);
   border-radius: 11px;
   padding: 13px 16px;
   transition: border-color .2s var(--ease), box-shadow .2s var(--ease);
 }
 .field input::placeholder,
-.field textarea::placeholder { color: #8B8275; }
+.field textarea::placeholder { color: #79827A; }
 .field input:focus,
 .field textarea:focus {
   outline: none;
   border-color: var(--ember);
-  box-shadow: 0 0 0 3px rgba(216,122,58,0.22);
+  box-shadow: 0 0 0 3px rgba(31,81,56,0.16);
 }
 .field textarea { resize: vertical; min-height: 130px; }
 .field .error-msg {
   display: none;
   margin-top: 7px;
   font-size: 0.85rem;
-  color: #E8705B;
+  color: #B3402E;
 }
 .field.invalid input,
-.field.invalid textarea { border-color: #E8705B; }
+.field.invalid textarea { border-color: #B3402E; }
 .field.invalid .error-msg { display: block; }
 .form-success { display: none; text-align: center; padding: 44px 10px; }
 .contact-form.sent form { display: none; }
@@ -729,7 +732,7 @@ body.menu-locked { overflow: hidden; }
   width: 58px; height: 58px;
   margin: 0 auto 20px;
   border-radius: 50%;
-  background: rgba(216,122,58,0.18);
+  background: rgba(31,81,56,0.12);
   display: grid;
   place-items: center;
   color: var(--ember-hot);
@@ -794,8 +797,8 @@ body.menu-locked { overflow: hidden; }
 <!-- ================= NAV ================= -->
 <header class="nav" id="nav">
   <!-- PLACEHOLDER-LOGO: swap text for an <img> when a logo exists -->
-  <a class="logo" href="#home" aria-label="Tony For Our Fitness, home">
-    Tony <span class="slash">/</span> For Our Fitness
+  <a class="logo" href="#home" aria-label="Tony Quartini, home">
+    Tony <span class="slash">/</span> Quartini
   </a>
   <nav aria-label="Primary">
     <ul class="nav-links">
@@ -829,7 +832,7 @@ body.menu-locked { overflow: hidden; }
   <section class="hero" id="home" aria-label="Intro">
     <div class="container hero-grid">
       <div>
-        <p class="hero-tag">Personal training with Tony Quartini</p>
+        <p class="hero-tag">One-on-one personal training</p>
         <h1 class="display">
           <span class="line"><span>Train smarter.</span></span>
           <span class="line"><span class="hot">Live stronger.</span></span>
@@ -1090,7 +1093,7 @@ body.menu-locked { overflow: hidden; }
 <!-- ================= FOOTER ================= -->
 <footer class="footer">
   <div class="container footer-inner">
-    <span class="footer-copy">© <span id="year">2026</span> Tony For Our Fitness · Tony Quartini</span>
+    <span class="footer-copy">© <span id="year">2026</span> Tony Quartini · Personal Training</span>
     <!-- PLACEHOLDER-SOCIAL: replace href="#" with real profile URLs -->
     <ul class="footer-social">
       <li>
