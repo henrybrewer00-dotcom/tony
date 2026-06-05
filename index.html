@@ -6,10 +6,10 @@
   Personal training by Tony Quartini
 
   HOW TO USE
-  Just open this file in a browser. No build step, no install.
-  (Three.js + fonts load from CDNs, so you need internet on
-  first load. If offline, the page still works — the 3D hero
-  swaps to a clean static fallback automatically.)
+  Open this file in a browser — no build step, no install.
+  The hero weight + About photo live in the assets/ folder
+  (AI-generated product/interior shots). Fonts load from
+  Google Fonts.
 
   THINGS TO REPLACE BEFORE GOING LIVE
   Search this file for the word "PLACEHOLDER" — every spot you
@@ -18,7 +18,7 @@
     2. Instagram / Facebook URLs  -> search: PLACEHOLDER-SOCIAL
     3. Testimonial quotes/names   -> search: PLACEHOLDER-QUOTES
   Optional: logo text/SVG (PLACEHOLDER-LOGO) and the About
-  photo slot (PLACEHOLDER-PHOTO).
+  photo (PLACEHOLDER-PHOTO — currently an AI gym shot).
 ============================================================ -->
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -303,32 +303,54 @@ section { padding: clamp(80px, 11vw, 140px) 0; }
   color: var(--ink-soft);
 }
 
-/* the 3D stage */
+/* the weight stage — photoreal dumbbell, gently animated.
+   Soft radial backdrop gives it a quiet studio feel without
+   competing with the page background. */
 .hero-stage {
   position: relative;
   aspect-ratio: 1 / 1;
   max-height: 72vh;
-  border-radius: 24px;
+  display: grid;
+  place-items: center;
+  background: radial-gradient(72% 58% at 50% 44%,
+              #ECE7DD 0%, rgba(244,241,235,0) 72%);
 }
-.hero-stage canvas {
-  width: 100% !important;
-  height: 100% !important;
-  border-radius: 24px;
+.weight-wrap {
+  position: relative;
+  width: min(88%, 560px);
+  will-change: transform;          /* JS parallax lives here */
 }
-/* static fallback if WebGL / the CDN is unavailable:
-   a quiet studio-style gradient + an SVG dumbbell mark */
-.hero-fallback {
-  display: none;
+.weight-img {
+  width: 100%;
+  height: auto;
+  animation: weight-float 7s ease-in-out infinite;
+  filter: drop-shadow(0 18px 22px rgba(27,26,24,0.16));
+  will-change: transform;
+}
+/* soft elliptical ground shadow; breathes opposite the float */
+.weight-shadow {
   position: absolute;
-  inset: 0;
-  border-radius: 24px;
-  background: radial-gradient(120% 90% at 50% 30%, var(--paper-deep) 0%, #DCD6CA 70%);
-  align-items: center;
-  justify-content: center;
+  left: 50%;
+  bottom: -14%;
+  width: 68%;
+  height: 12%;
+  transform: translateX(-50%);
+  background: radial-gradient(50% 50% at 50% 50%,
+              rgba(27,26,24,0.28), rgba(27,26,24,0) 70%);
+  animation: shadow-breathe 7s ease-in-out infinite;
+  pointer-events: none;
 }
-.hero-stage.no-webgl .hero-fallback { display: flex; }
-.hero-stage.no-webgl canvas { display: none; }
-.hero-fallback svg { width: 56%; opacity: 0.9; }
+@keyframes weight-float {
+  0%, 100% { transform: translateY(0)     rotate(-1.4deg); }
+  50%      { transform: translateY(-18px) rotate(1.4deg); }
+}
+@keyframes shadow-breathe {
+  0%, 100% { transform: translateX(-50%) scale(1);    opacity: .9; }
+  50%      { transform: translateX(-50%) scale(.82);  opacity: .5; }
+}
+/* JS adds .paused when the hero scrolls off-screen */
+.hero-stage.paused .weight-img,
+.hero-stage.paused .weight-shadow { animation-play-state: paused; }
 
 @media (max-width: 820px) {
   .hero { padding-top: calc(var(--nav-h) + 16px); }
@@ -379,24 +401,15 @@ section { padding: clamp(80px, 11vw, 140px) 0; }
   gap: clamp(32px, 6vw, 80px);
   align-items: center;
 }
-/* PLACEHOLDER-PHOTO: swap this styled div for a real photo:
-   <img src="tony.jpg" alt="Tony Quartini coaching a client"
-        style="border-radius:20px; width:100%; aspect-ratio:4/5; object-fit:cover;"> */
+/* PLACEHOLDER-PHOTO: currently an AI-generated studio shot
+   (assets/gym.jpg) — swap the src for a real photo of Tony
+   when you have one; the styling stays the same. */
 .about-photo {
+  width: 100%;
   aspect-ratio: 4 / 5;
+  object-fit: cover;
   border-radius: 20px;
-  background:
-    linear-gradient(160deg, rgba(176,110,59,0.16), rgba(27,26,24,0.05)),
-    var(--paper-deep);
   border: 1px solid var(--line);
-  display: grid;
-  place-items: center;
-  color: var(--ink-soft);
-  font-size: 0.875rem;
-  letter-spacing: 0.08em;
-  text-transform: uppercase;
-  text-align: center;
-  padding: 20px;
 }
 .about-body p { margin-bottom: 18px; color: var(--ink-soft); }
 .about-body p strong { color: var(--ink); }
@@ -646,19 +659,18 @@ section { padding: clamp(80px, 11vw, 140px) 0; }
         <p class="hero-note">6+ years coaching real people at every level.</p>
       </div>
 
-      <!-- 3D stage: Three.js renders the dumbbell here.
-           If WebGL or the CDN fails, .no-webgl shows the SVG fallback. -->
-      <div class="hero-stage" id="heroStage" role="img"
-           aria-label="A matte black dumbbell rotating slowly on a pedestal, lit like a studio product shot.">
-        <div class="hero-fallback" aria-hidden="true">
-          <!-- simple dumbbell mark, used only when 3D is unavailable -->
-          <svg viewBox="0 0 200 90" fill="none" xmlns="http://www.w3.org/2000/svg">
-            <rect x="55" y="41" width="90" height="8" rx="4" fill="#1B1A18"/>
-            <rect x="34" y="18" width="16" height="54" rx="5" fill="#1B1A18"/>
-            <rect x="18" y="26" width="12" height="38" rx="5" fill="#1B1A18"/>
-            <rect x="150" y="18" width="16" height="54" rx="5" fill="#1B1A18"/>
-            <rect x="170" y="26" width="12" height="38" rx="5" fill="#1B1A18"/>
-          </svg>
+      <!-- Weight stage: photoreal dumbbell (assets/dumbbell.webp,
+           AI-generated product shot) — floats gently, reacts to
+           mouse and scroll via the script at the bottom. -->
+      <div class="hero-stage" id="heroStage">
+        <div class="weight-wrap" id="weightWrap">
+          <picture>
+            <source type="image/webp" srcset="assets/dumbbell.webp">
+            <img class="weight-img" src="assets/dumbbell.png"
+                 alt="A matte black dumbbell, lit like a studio product shot"
+                 width="1200" height="817" fetchpriority="high">
+          </picture>
+          <div class="weight-shadow" aria-hidden="true"></div>
         </div>
       </div>
     </div>
@@ -716,10 +728,11 @@ section { padding: clamp(80px, 11vw, 140px) 0; }
   <!-- ================= ABOUT ================= -->
   <section class="about" id="about">
     <div class="container about-grid">
-      <!-- PLACEHOLDER-PHOTO: swap this div for a real photo of Tony (see CSS note above .about-photo) -->
-      <div class="about-photo reveal" role="img" aria-label="Placeholder for a photo of Tony Quartini">
-        Photo of Tony<br>(replace me)
-      </div>
+      <!-- PLACEHOLDER-PHOTO: AI-generated studio shot for now —
+           swap src for a real photo of Tony when you have one -->
+      <img class="about-photo reveal" src="assets/gym.jpg"
+           alt="A calm, sunlit training studio with racked matte black dumbbells"
+           loading="lazy" width="1024" height="1536">
       <div class="about-body reveal" data-delay="1">
         <span class="kicker">About</span>
         <h2 class="section-title">Hi, I'm Tony Quartini.</h2>
@@ -892,22 +905,11 @@ section { padding: clamp(80px, 11vw, 140px) 0; }
   </div>
 </footer>
 
-<!-- ============================================================
-  THREE.JS from CDN
-  r149 classic (non-module) build: loads over file:// with zero
-  setup. If the CDN is unreachable, onerror flags it and the
-  hero shows its static fallback instead.
-============================================================ -->
-<script src="https://cdn.jsdelivr.net/npm/three@0.149.0/build/three.min.js"
-        onerror="window.__threeFailed = true"></script>
-
 <script>
 /* ============================================================
    SITE SCRIPTS
    1) nav         2) scroll-reveal   3) testimonials
-   4) contact form 5) Three.js hero
-   Everything is wrapped so a failure in one feature can't
-   take down the rest of the page.
+   4) contact form 5) hero weight animation
 ============================================================ */
 (function () {
   "use strict";
@@ -1065,189 +1067,54 @@ section { padding: clamp(80px, 11vw, 140px) 0; }
   document.getElementById("year").textContent = new Date().getFullYear();
 
   /* ============================================================
-     5. THREE.JS HERO — matte-black dumbbell on a pedestal
-        Studio product-render look: PBR materials, soft key/fill/
-        rim lighting, soft shadows. No bloom, no particles.
-
-        Performance:
-        - geometry detail + pixel ratio drop on small screens
-        - rendering pauses when the hero is off-screen or the
-          tab is hidden (IntersectionObserver + visibilitychange)
-        - reduced-motion users get a single static frame
+     5. HERO WEIGHT — gentle motion on the photoreal dumbbell
+        - constant slow float/rock: pure CSS (@keyframes)
+        - mouse parallax + scroll tilt: JS lerp on the wrapper
+        - pauses when the hero is off-screen or the tab hides
+        - reduced-motion users get a perfectly still image
   ============================================================ */
   var stageEl = document.getElementById("heroStage");
+  var weightWrap = document.getElementById("weightWrap");
 
-  function showFallback() { stageEl.classList.add("no-webgl"); }
+  if (!prefersReducedMotion) {
+    var targetX = 0, targetY = 0;            // where the pointer wants us
+    var curX = 0, curY = 0;                  // smoothed values
+    var scrollTilt = 0;
+    var heroVisible = true;
+    var rafId = null;
 
-  // CDN failed to load, or browser lacks WebGL -> static fallback
-  if (window.__threeFailed || typeof THREE === "undefined") {
-    showFallback();
-    return;
-  }
+    window.addEventListener("pointermove", function (e) {
+      targetX = (e.clientX / window.innerWidth) * 2 - 1;   // -1 .. 1
+      targetY = (e.clientY / window.innerHeight) * 2 - 1;
+    }, { passive: true });
 
-  var renderer;
-  try {
-    renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
-  } catch (err) {
-    showFallback();
-    return;
-  }
+    window.addEventListener("scroll", function () {
+      // small extra tilt as the hero scrolls away (capped)
+      scrollTilt = Math.min(window.scrollY / window.innerHeight, 1);
+    }, { passive: true });
 
-  var isMobile = window.matchMedia("(max-width: 820px)").matches;
-  var SEG = isMobile ? 36 : 72;                  // radial segments (poly budget)
-
-  renderer.setPixelRatio(Math.min(window.devicePixelRatio, isMobile ? 1.5 : 2));
-  renderer.shadowMap.enabled = true;
-  renderer.shadowMap.type = THREE.PCFSoftShadowMap;
-  renderer.outputEncoding = THREE.sRGBEncoding;
-  renderer.toneMapping = THREE.ACESFilmicToneMapping;
-  renderer.toneMappingExposure = 1.05;
-  stageEl.appendChild(renderer.domElement);
-
-  var scene = new THREE.Scene();               // transparent — page bg shows through
-
-  var camera = new THREE.PerspectiveCamera(34, 1, 0.1, 50);
-  camera.position.set(0, 0.7, 6.4);
-  camera.lookAt(0, -0.1, 0);
-
-  /* ---- materials (PBR) ---- */
-  var plateMat = new THREE.MeshStandardMaterial({
-    color: 0x141414, roughness: 0.62, metalness: 0.35   // matte black iron
-  });
-  var handleMat = new THREE.MeshStandardMaterial({
-    color: 0x2b2b2e, roughness: 0.38, metalness: 0.75   // darker brushed steel
-  });
-  var pedestalMat = new THREE.MeshStandardMaterial({
-    color: 0xE6E1D6, roughness: 0.95, metalness: 0.0    // quiet stone plinth
-  });
-
-  /* ---- dumbbell (one object, built from cylinders) ---- */
-  var dumbbell = new THREE.Group();
-
-  function cyl(radius, length, material, x, segments) {
-    var geo = new THREE.CylinderGeometry(radius, radius, length, segments || SEG);
-    var mesh = new THREE.Mesh(geo, material);
-    mesh.rotation.z = Math.PI / 2;             // lie along the X axis
-    mesh.position.x = x;
-    mesh.castShadow = true;
-    mesh.receiveShadow = true;
-    dumbbell.add(mesh);
-    return mesh;
-  }
-
-  cyl(0.105, 2.5, handleMat, 0);               // handle bar
-  [-1, 1].forEach(function (side) {
-    cyl(0.19, 0.10, handleMat, side * 0.78);   // collar
-    cyl(0.56, 0.17, plateMat,  side * 0.95);   // inner (big) plate
-    cyl(0.46, 0.15, plateMat,  side * 1.12);   // outer (small) plate
-    cyl(0.13, 0.06, handleMat, side * 1.225);  // end cap
-  });
-  dumbbell.position.y = -0.12;   // hover just above the pedestal
-  scene.add(dumbbell);
-
-  /* ---- pedestal + soft contact shadow ---- */
-  var pedestal = new THREE.Mesh(
-    new THREE.CylinderGeometry(1.7, 1.78, 0.22, SEG),
-    pedestalMat
-  );
-  pedestal.position.y = -1.05;
-  pedestal.receiveShadow = true;
-  scene.add(pedestal);
-
-  // invisible plane that only catches shadow, on top of the pedestal,
-  // so the cast shadow reads as soft contact shading
-  var shadowCatcher = new THREE.Mesh(
-    new THREE.PlaneGeometry(6, 6),
-    new THREE.ShadowMaterial({ opacity: 0.18 })
-  );
-  shadowCatcher.rotation.x = -Math.PI / 2;
-  shadowCatcher.position.y = -0.935;
-  shadowCatcher.receiveShadow = true;
-  scene.add(shadowCatcher);
-
-  /* ---- studio lighting: warm key, cool fill, rim ---- */
-  scene.add(new THREE.HemisphereLight(0xfff4e6, 0x8c8678, 0.55));
-
-  var key = new THREE.DirectionalLight(0xfff1e0, 1.5);
-  key.position.set(3.2, 4.5, 3.5);
-  key.castShadow = true;
-  key.shadow.mapSize.set(isMobile ? 512 : 1024, isMobile ? 512 : 1024);
-  key.shadow.camera.near = 1;
-  key.shadow.camera.far = 15;
-  key.shadow.camera.left = key.shadow.camera.bottom = -4;
-  key.shadow.camera.right = key.shadow.camera.top = 4;
-  key.shadow.radius = 6;                       // soften shadow edges
-  scene.add(key);
-
-  var fill = new THREE.DirectionalLight(0xdfe6f0, 0.45);
-  fill.position.set(-4, 1.5, 2);
-  scene.add(fill);
-
-  var rim = new THREE.DirectionalLight(0xffffff, 0.7);
-  rim.position.set(-1.5, 3, -4.5);
-  scene.add(rim);
-
-  /* ---- sizing ---- */
-  function resize() {
-    var w = stageEl.clientWidth;
-    var h = stageEl.clientHeight;
-    camera.aspect = w / h;
-    camera.updateProjectionMatrix();
-    renderer.setSize(w, h, false);
-  }
-  resize();
-  window.addEventListener("resize", function () {
-    resize();
-    if (prefersReducedMotion) renderer.render(scene, camera);
-  });
-
-  /* ---- gentle interactivity: mouse parallax + scroll tilt ---- */
-  var targetX = 0, targetY = 0;                // where the mouse wants us
-  var curX = 0, curY = 0;                      // smoothed values
-
-  window.addEventListener("pointermove", function (e) {
-    targetX = (e.clientX / window.innerWidth) * 2 - 1;    // -1 .. 1
-    targetY = (e.clientY / window.innerHeight) * 2 - 1;
-  }, { passive: true });
-
-  var scrollTilt = 0;
-  window.addEventListener("scroll", function () {
-    // small extra tilt as you scroll the hero away (capped)
-    scrollTilt = Math.min(window.scrollY / window.innerHeight, 1) * 0.35;
-  }, { passive: true });
-
-  /* ---- render loop, paused when not visible ---- */
-  var heroVisible = true;
-  var rafId = null;
-
-  function frame() {
-    rafId = null;
-
-    // smooth (lerp) toward the pointer for a weighty, premium feel
-    curX += (targetX - curX) * 0.04;
-    curY += (targetY - curY) * 0.04;
-
-    dumbbell.rotation.y += 0.004;                          // slow constant spin
-    dumbbell.rotation.z = curX * 0.12;                     // mouse sway
-    dumbbell.rotation.x = curY * 0.10 + scrollTilt * 0.4;  // mouse + scroll tilt
-    camera.position.x = curX * 0.18;                       // subtle camera drift
-    camera.lookAt(0, -0.1, 0);
-
-    renderer.render(scene, camera);
-    if (heroVisible && !document.hidden) rafId = requestAnimationFrame(frame);
-  }
-  function play() {
-    if (!rafId && heroVisible && !document.hidden && !prefersReducedMotion) {
-      rafId = requestAnimationFrame(frame);
+    function frame() {
+      rafId = null;
+      // lerp toward the pointer for a weighty, premium feel
+      curX += (targetX - curX) * 0.045;
+      curY += (targetY - curY) * 0.045;
+      weightWrap.style.transform =
+        "translate(" + (curX * 16).toFixed(2) + "px, " +
+                       (curY * 10 + scrollTilt * 26).toFixed(2) + "px) " +
+        "rotate(" + (curX * 2.5 + scrollTilt * 3).toFixed(2) + "deg)";
+      if (heroVisible && !document.hidden) rafId = requestAnimationFrame(frame);
     }
-  }
+    function play() {
+      if (!rafId && heroVisible && !document.hidden) {
+        rafId = requestAnimationFrame(frame);
+      }
+    }
 
-  if (prefersReducedMotion) {
-    renderer.render(scene, camera);            // one static, well-lit frame
-  } else {
     if ("IntersectionObserver" in window) {
       new IntersectionObserver(function (entries) {
         heroVisible = entries[0].isIntersecting;
+        // also pause the CSS float/shadow animations off-screen
+        stageEl.classList.toggle("paused", !heroVisible);
         play();
       }, { threshold: 0.05 }).observe(stageEl);
     }
